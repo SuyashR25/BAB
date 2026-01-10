@@ -26,11 +26,12 @@ This project implements a 2-Degree-of-Freedom (2-DoF) Planar Plotter simulation 
 
 ```bash
 sudo apt install ros-jazzy-teleop-twist-keyboard
-python3 -m venv venv ( Virtual Environment Setup )
-source venv/bin/activate
 pip install -r requirements.txt
 ```
-
+- If you get error while installing from requirements.txt, run the following command instead
+```bash
+pip install -r requirements.txt  --break-system-packages
+```
 ## 3. Directory Structure
 
 Ensure your workspace is organized as follows:
@@ -75,13 +76,14 @@ Copy the IP address listed next to IPV4 (e.g., 172.23.112.1).
 
 **Update the Bridge Script:**
 
-Open BAB_sbmission/src/scribe_bot/scribe_bot/scribe_bridge.py and update line 10:
+Open in wsl BAB_sbmission/src/scribe_bot/scribe_bot/scribe_bridge.py and update line 10:
 
 ```python
 WINDOWS_IP = '172.xx.xx.1' 
 ```
 
 > Note: This IP may change if you restart your computer/WSL.
+
 
 ### Step 2: Configure CoppeliaSim
 
@@ -99,23 +101,27 @@ Attach the Lua Script (provided in submission) to the Base object to handle pen 
 
 ```bash
 cd ~/BAB_submission
-source /opt/ros/jazzy/setup.bash
+sudo apt install colcon
+colcon build
+source install/setup.bash
 ```
 
 ## 5. Execution Guide
 
 Follow this specific order to avoid connection errors.
 
+
 1. **Start Simulation (Windows)**
    - Open CoppeliaSim and press the Play button.
    - Verification: The bottom status bar should display "SCRIBE BOT: System Initialization...".
 
-2. **Start the Bridge (WSL Terminal 1)**
+2. **Turn firewall temorarily off for the communication to happen or you can add Inbound Rule for port 23000 to accept connections over the network.**
+
+3. **Start the Bridge (WSL Terminal 1)**
    - This node connects ROS to the Simulator.
 
 ```bash
-colcon build
-source install/setup.bash
+cd ~/BAB_submission
 ros2 run scribe_bot scribe_bridge
 ```
 
@@ -125,6 +131,7 @@ Verification: Output should say ✅ Connected to Windows... and ✅ Joint Handle
    - This node captures your keyboard input.
 
 ```bash
+source /opt/ros/jazzy/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
