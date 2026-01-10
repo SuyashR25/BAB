@@ -177,6 +177,6 @@ Robot moves erratically:
 - [x] README.md (This file)
 - [x] 2-Minute Demo Video Link
 
-Submitted by: BT_ke_bacche
-Track : senior
-Link To the Demonstration : https://youtu.be/Vq_coAOnuz4
+- Submitted by: BT_ke_bacche
+- Track : senior
+- Link To the Demonstration : https://youtu.be/Vq_coAOnuz4
