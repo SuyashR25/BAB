@@ -18,7 +18,7 @@ This project implements a 2-Degree-of-Freedom (2-DoF) Planar Plotter simulation 
 - Network: Firewall must allow incoming connections on port 23000 (default ZMQ port).
  {if needed turn off the firewall or add a new rule for port 23000 in Advanced network settings}
 
-### WSL Side (Ubuntu 22.04/24.04)
+### WSL Side (Ubuntu 24.04)
 
 - ROS2 Distribution:  Jazzy Jalisco
 - Python: 3.10+
@@ -26,7 +26,9 @@ This project implements a 2-Degree-of-Freedom (2-DoF) Planar Plotter simulation 
 
 ```bash
 sudo apt install ros-jazzy-teleop-twist-keyboard
-pip install coppeliasim-zmqremoteapi-client
+python3 -m venv venv ( Virtual Environment Setup )
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ## 3. Directory Structure
@@ -34,15 +36,30 @@ pip install coppeliasim-zmqremoteapi-client
 Ensure your workspace is organized as follows:
 
 ```
-scribe_ws/
-├── wsl_ros2/
-│   └── scribe_bridge.py
-├── model/
-│   └── Scribe_Bot_Scene.ttt        <-- CoppeliaSim Scene File
-└── README.md
+BAB_SUBMISSION/
+├─ src/
+│  └─ scribe_bot/
+│     ├─ resource/
+│     │  └─ scribe_bot/
+│     ├─ scribe_bot/
+│     │  ├─ __init__.py
+│     │  └─ scribe_bridge.py
+│     └─ test/
+│        ├─ test_copyright.py
+│        ├─ test_flake8.py
+│        └─ test_pep257.py
+├─ package.xml
+├─ setup.cfg
+├─ setup.py
+├─ README.md
+├─ requirements.txt
+├─ Screen Recording 2026-01-09 235402.mp4
+└─ Sketcher-2-dof.ttt
 ```
 
 ## 4. Installation & Setup
+Ensure ROS2 Jazzy is installed. If not then install by following this link:
+https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html
 
 ### Step 1: Configure the Network Bridge (Critical)
 
@@ -58,10 +75,10 @@ Copy the IP address listed next to IPV4 (e.g., 172.23.112.1).
 
 **Update the Bridge Script:**
 
-Open srcibe_ws/wsl_ros2/scribe_bridge.py and update line 10:
+Open BAB_sbmission/src/scribe_bot/scribe_bot/scribe_bridge.py and update line 10:
 
 ```python
-WINDOWS_IP = '172.xx.xx.1'  # Paste your specific IP here
+WINDOWS_IP = '172.xx.xx.1' 
 ```
 
 > Note: This IP may change if you restart your computer/WSL.
@@ -81,7 +98,7 @@ Attach the Lua Script (provided in submission) to the Base object to handle pen 
 ### Step 3: Build the ROS2 Package
 
 ```bash
-cd ~/scribe_ws
+cd ~/BAB_submission
 source /opt/ros/jazzy/setup.bash
 ```
 
@@ -97,8 +114,9 @@ Follow this specific order to avoid connection errors.
    - This node connects ROS to the Simulator.
 
 ```bash
-source install/source /opt/ros/jazzy/setup.bash
-python3 scribe_bridge.py
+colcon build
+source install/setup.bash
+ros2 run scribe_bot scribe_bridge
 ```
 
 Verification: Output should say ✅ Connected to Windows... and ✅ Joint Handles Found.
